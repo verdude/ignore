@@ -19,15 +19,26 @@ func parse(contents string) []string {
 	return entries
 }
 
-func getLines(fname string) []string {
-	ignore, err := os.Open(fname)
+func getLines(fname string, create bool) []string {
+	f, err := os.Open(fname)
 	if err != nil {
+		if create {
+			f, err = os.Create(fname)
+			if err != nil {
+				log.Println("Could not create ", fname)
+				log.Fatal("Failed with err: ", err)
+			} else {
+				log.Println("Created", fname)
+				f.Close()
+				return make([]string, 0)
+			}
+		}
 		log.Fatal(fname, " not found.")
 	}
-	defer ignore.Close()
+	defer f.Close()
 
 	b := make([]byte, 1024)
-	nread, err := ignore.Read(b)
+	nread, err := f.Read(b)
 	if err != nil {
 		log.Fatal("read fail.")
 	}
@@ -39,9 +50,22 @@ func isMissing(patterns []string, str string) bool {
 	return !found
 }
 
+func writeIgnore(patterns []string) {
+	f, err := os.Open(".gitignore")
+	if err != nil {
+		log.Fatal("Failed to write to file")
+	}
+	defer f.Close()
+
+	for _, pattern := range patterns {
+		f.Write([]byte(pattern))
+		f.Write([]byte("\n"))
+	}
+}
+
 func main() {
-	presets := getLines("presets.txt")
-	patterns := getLines(".gitignore")
+	presets := getLines("/etc/ignoregit/presets.txt", true)
+	patterns := getLines(".gitignore", true)
 	missing := make([]string, 0)
 
 	slices.Sort(patterns)
