@@ -25,8 +25,8 @@ func getLines(fname string, create bool) []string {
 		if create {
 			f, err = os.Create(fname)
 			if err != nil {
-				log.Println("Could not create ", fname)
-				log.Fatal("Failed with err: ", err)
+				log.Println("Could not create", fname)
+				log.Fatal("ERROR: ", err)
 			} else {
 				log.Println("Created", fname)
 				f.Close()
@@ -63,7 +63,7 @@ func writeIgnore(patterns []string) {
 	}
 }
 
-func main() {
+func collectPatterns() []string {
 	presets := getLines("/etc/ignoregit/presets.txt", true)
 	patterns := getLines(".gitignore", true)
 	missing := make([]string, 0)
@@ -77,4 +77,10 @@ func main() {
 	}
 	patterns = append(patterns, missing...)
 	log.Println(patterns)
+	return patterns
+}
+
+func main() {
+	patterns := collectPatterns()
+	writeIgnore(patterns)
 }
