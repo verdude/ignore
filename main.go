@@ -5,21 +5,19 @@ import (
 	"log"
 	"os"
 	"strings"
+	//	"bytes"
 )
 
-func parse(contents string)  *list.List {
+func parse(contents string) *list.List {
 	entries := list.New()
 	lines := strings.Split(strings.TrimSpace(contents), "\n")
 	for _, line := range lines {
-		entries.PushBack(strings.TrimSpace(line))
+		str := strings.TrimSpace(line)
+		if len(str) > 0 {
+			entries.PushBack(str)
+		}
 	}
 	return entries
-}
-
-func printEntries(entries *list.List) {
-	for e := entries.Front(); e != nil; e = e.Next() {
-		log.Println(string(e.Value.(string)))
-	}
 }
 
 func main() {
@@ -28,10 +26,21 @@ func main() {
 		log.Fatal("not found.")
 	}
 	defer ignore.Close()
-	bytes := make([]byte, 1024)
-	_, e := ignore.Read(bytes)
-	if e != nil {
+
+	b := make([]byte, 1024)
+	nread, err := ignore.Read(b)
+	if err != nil {
 		log.Fatal("read fail.")
 	}
-	printEntries(parse(string(bytes)))
+
+	entries := parse(string(b[:nread]))
+	words := make([]string, 0)
+	for e := entries.Front(); e != nil; e = e.Next() {
+		if e.Value != "" {
+			word := e.Value.(string)
+			words = append(words, word)
+			log.Println(word)
+		}
+	}
+
 }
