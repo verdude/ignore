@@ -1,14 +1,13 @@
 package main
 
 import (
-	"container/list"
 	"log"
 	"os"
 	"strings"
 	"golang.org/x/exp/slices"
 )
 
-func parse(contents string) *list.List {
+func parse(contents string) []string {
 	entries := make([]string, 0)
 	lines := strings.Split(strings.TrimSpace(contents), "\n")
 	for _, line := range lines {
@@ -33,7 +32,7 @@ func main() {
 		log.Fatal("read fail.")
 	}
 
-	entries := parse(string(b[:nread]))
-	slices.Sort(words)
-	log.Println(words)
+	patterns := parse(string(b[:nread]))
+	slices.Sort(patterns)
+	log.Println(patterns)
 }
