@@ -1,10 +1,10 @@
 package main
 
 import (
+	"golang.org/x/exp/slices"
 	"log"
 	"os"
 	"strings"
-	"golang.org/x/exp/slices"
 )
 
 func parse(contents string) []string {
@@ -19,10 +19,10 @@ func parse(contents string) []string {
 	return entries
 }
 
-func main() {
-	ignore, err := os.Open(".gitignore")
+func getLines(fname string) []string {
+	ignore, err := os.Open(fname)
 	if err != nil {
-		log.Fatal("not found.")
+		log.Fatal(fname, " not found.")
 	}
 	defer ignore.Close()
 
@@ -31,8 +31,26 @@ func main() {
 	if err != nil {
 		log.Fatal("read fail.")
 	}
+	return parse(string(b[:nread]))
+}
 
-	patterns := parse(string(b[:nread]))
+func isMissing(patterns []string, str string) bool {
+	_, found := slices.BinarySearch(patterns, str)
+	return !found
+}
+
+func main() {
+	presets := getLines("presets.txt")
+	patterns := getLines(".gitignore")
+	missing := make([]string, 0)
+
 	slices.Sort(patterns)
+
+	for _, preset := range presets {
+		if isMissing(patterns, preset) {
+			missing = append(missing, preset)
+		}
+	}
+	patterns = append(patterns, missing...)
 	log.Println(patterns)
 }
