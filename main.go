@@ -5,16 +5,16 @@ import (
 	"log"
 	"os"
 	"strings"
-	//	"bytes"
+	"golang.org/x/exp/slices"
 )
 
 func parse(contents string) *list.List {
-	entries := list.New()
+	entries := make([]string, 0)
 	lines := strings.Split(strings.TrimSpace(contents), "\n")
 	for _, line := range lines {
 		str := strings.TrimSpace(line)
 		if len(str) > 0 {
-			entries.PushBack(str)
+			entries = append(entries, str)
 		}
 	}
 	return entries
@@ -34,13 +34,6 @@ func main() {
 	}
 
 	entries := parse(string(b[:nread]))
-	words := make([]string, 0)
-	for e := entries.Front(); e != nil; e = e.Next() {
-		if e.Value != "" {
-			word := e.Value.(string)
-			words = append(words, word)
-			log.Println(word)
-		}
-	}
-
+	slices.Sort(words)
+	log.Println(words)
 }
