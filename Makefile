@@ -8,6 +8,9 @@ $(EXE): $(wildcard %.go) $(BUILDROOT)
 $(BUILDROOT):
 	mkdir -p build
 
+.PHONY: test
+test:
+
 .PHONY: clean
 clean:
 	rm -rf $(BUILDROOT)
