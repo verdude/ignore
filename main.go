@@ -54,7 +54,7 @@ func isMissing(patterns []string, str string) bool {
 }
 
 func writeIgnore(patterns []string) {
-	f, err := os.Open(".gitignore")
+	f, err := os.OpenFile(".gitignore", os.O_WRONLY, 0444)
 	if err != nil {
 		log.Fatal("Failed to write to file")
 	}
@@ -79,7 +79,6 @@ func collectPatterns() []string {
 		}
 	}
 	patterns = append(patterns, missing...)
-	log.Println(patterns)
 	return patterns
 }
 

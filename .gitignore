@@ -1,0 +1,6 @@
+.\#
+.o
+.terraform/
+\#\#
+assets/
+build/
