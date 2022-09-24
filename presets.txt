@@ -1,6 +1,6 @@
-\#*\#
-.\#*
-build/**
-assets/**
-*.o
-.terraform/**
+\#\#
+.\#
+build/
+assets/
+.o
+.terraform/

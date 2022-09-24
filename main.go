@@ -4,6 +4,8 @@ import (
 	"golang.org/x/exp/slices"
 	"log"
 	"os"
+  "io"
+  "io/ioutil"
 	"strings"
 )
 
@@ -37,12 +39,13 @@ func getLines(fname string, create bool) []string {
 	}
 	defer f.Close()
 
-	b := make([]byte, 1024)
-	nread, err := f.Read(b)
+	b, err := ioutil.ReadFile(fname)
 	if err != nil {
-		log.Fatal("read fail.")
+    if err != io.EOF {
+      log.Fatal("read fail: ", err)
+    }
 	}
-	return parse(string(b[:nread]))
+	return parse(string(b))
 }
 
 func isMissing(patterns []string, str string) bool {
