@@ -18,6 +18,6 @@ clean:
 .PHONY: install
 install: $(EXE)
 	strip $(BUILDROOT)/$(EXE)
-	install -D -m 444 presets.txt $(DESTDIR)/etc/ignoregit/presets.txt
-	install -D -m 444 LICENSE $(DESTDIR)/etc/ignoregit/LICENSE
-	install -D -m 111 $(BUILDROOT)/$(EXE) $(DESTDIR)/usr/bin/$(EXE)
+	install -D -m 644 presets.txt $(DESTDIR)/etc/ignoregit/presets.txt
+	install -D -m 644 LICENSE $(DESTDIR)/etc/ignoregit/LICENSE
+	install -D -m 511 $(BUILDROOT)/$(EXE) $(DESTDIR)/usr/bin/$(EXE)
