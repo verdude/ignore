@@ -37,13 +37,12 @@ func getLines(fname string, create bool) []string {
 				return make([]string, 0)
 			}
 		}
-		log.Fatal(fname, " not found.")
 	}
 	defer f.Close()
 
 	b, err := ioutil.ReadFile(fname)
 	if err != nil {
-		if err != io.EOF {
+		if err != io.EOF && create {
 			log.Fatal("read fail: ", err)
 		}
 	}
@@ -60,7 +59,8 @@ func writeIgnore(patterns []string, stdout bool) {
 	if stdout {
 		f = os.Stdout
 	} else {
-		f, err := os.OpenFile(".gitignore", os.O_WRONLY, 0444)
+		var err error
+		f, err = os.Create(".gitignore")
 		if err != nil {
 			log.Fatal("Failed to write to file")
 		}
@@ -73,9 +73,9 @@ func writeIgnore(patterns []string, stdout bool) {
 	}
 }
 
-func collectPatterns() []string {
+func collectPatterns(shouldCreate bool) []string {
 	presets := getLines("/etc/ignoregit/presets.txt", true)
-	patterns := getLines(".gitignore", true)
+	patterns := getLines(".gitignore", shouldCreate)
 	missing := make([]string, 0)
 
 	slices.Sort(patterns)
@@ -101,6 +101,6 @@ func main() {
 		return
 	}
 
-	patterns := collectPatterns()
+	patterns := collectPatterns(!*stdout)
 	writeIgnore(patterns, *stdout)
 }
