@@ -90,6 +90,7 @@ func collectPatterns() []string {
 
 func main() {
 	var stdout = flag.Bool("1", false, "Write to stdout instead of to a file")
+	var version = flag.Bool("v", false, "Print version and exit")
 	flag.Parse()
 	patterns := collectPatterns()
 	writeIgnore(patterns, *stdout)
