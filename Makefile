@@ -3,7 +3,7 @@ BUILDROOT := build
 EXE := ignore
 EXEPATH := $(BUILDROOT)/$(EXE)
 
-$(EXEPATH): $(wildcard %.go) $(BUILDROOT)
+$(EXEPATH): $(wildcard *.go) $(BUILDROOT)
 	go build -o $(EXEPATH)
 
 $(BUILDROOT):

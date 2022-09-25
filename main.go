@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"golang.org/x/exp/slices"
 	"io"
 	"io/ioutil"
@@ -89,16 +90,16 @@ func collectPatterns() []string {
 }
 
 func main() {
-  version := "0.1.4"
+	version := "0.1.4"
 
 	var stdout = flag.Bool("1", false, "Write to stdout instead of to a file")
-	var version = flag.Bool("v", false, "Print version and exit")
+	var print_version = flag.Bool("v", false, "Print version and exit")
 	flag.Parse()
 
-  if version {
-    fmt.Println(version)
-    return
-  }
+	if *print_version {
+		fmt.Println(version)
+		return
+	}
 
 	patterns := collectPatterns()
 	writeIgnore(patterns, *stdout)
