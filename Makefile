@@ -2,7 +2,7 @@ PROJECT := ignoregit
 BUILDROOT := build
 EXE := ignore
 
-$(EXE): $(wildcard %.go) $(BUILDROOT)
+$(BUILDROOT)/$(EXE): $(wildcard %.go) $(BUILDROOT)
 	go build -o $(BUILDROOT)/$(EXE)
 
 $(BUILDROOT):
@@ -14,6 +14,10 @@ test:
 .PHONY: clean
 clean:
 	rm -rf $(BUILDROOT)
+
+.PHONY: fmt
+fmt: $(wildcard *.go)
+	gofmt -s -w -e $<
 
 .PHONY: install
 install: $(EXE)
