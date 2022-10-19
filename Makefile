@@ -7,7 +7,7 @@ $(EXEPATH): $(wildcard *.go) $(BUILDROOT)
 	go build -o $(EXEPATH)
 
 $(BUILDROOT):
-	mkdir -p build
+	mkdir -p $(BUILDROOT)
 
 .PHONY: test
 test:
